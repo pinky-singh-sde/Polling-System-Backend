@@ -22,18 +22,29 @@ const app = express();
 
 const server = http.createServer(app);
 
+const CLIENT_URL =
+  "https://polling-system-frontend-pi.vercel.app";
+
 // EXPORT IO
 export const io = new Server(server, {
-  cors: {
-    origin: "*",
+   cors: {
+    origin: CLIENT_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
   },
+
+  transports: ["websocket", "polling"],
 });
 
 // SOCKET SETUP
 setupSocket(io);
 
 // MIDDLEWARES
-app.use(cors());
+app.use( cors({
+    origin: CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }));
 
 app.use(express.json());
 
